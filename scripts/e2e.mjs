@@ -2,9 +2,10 @@ import { spawn } from 'node:child_process';
 import { createReadStream } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { setTimeout as sleep } from 'node:timers/promises';
-import WebSocket from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 
-const PORT = 8798, MOCK_PORT = 9018, children = [];
+const PORT = 8798, children = [];
+let testSource;
 function launch(file, env = {}) {
   const child = spawn(process.execPath, ['node_modules/tsx/dist/cli.mjs', file], {
     cwd: process.cwd(), stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, ...env },
@@ -36,6 +37,24 @@ async function readFrames(id) {
   for await (const line of lines) if (line) result.push(JSON.parse(line));
   return result;
 }
+async function startTestSource() {
+  // An isolated integration-test fixture, started only for the test run.
+  const wss = new WebSocketServer({ host: '127.0.0.1', port: 0 });
+  await new Promise((resolve, reject) => {
+    wss.once('listening', resolve);
+    wss.once('error', reject);
+  });
+  wss.on('connection', (ws) => {
+    let sequence = 0;
+    const timer = setInterval(() => {
+      if (ws.readyState !== WebSocket.OPEN) return;
+      ws.send(JSON.stringify({ type: 'test-frame', sequence: ++sequence, value: sequence / 100 }));
+    }, 16);
+    ws.once('close', () => clearInterval(timer));
+    ws.once('error', () => clearInterval(timer));
+  });
+  return wss;
+}
 function assert(condition, description) { if (!condition) throw new Error(description); }
 async function websocket(path) {
   const ws = new WebSocket(`ws://127.0.0.1:${PORT}/${path}`);
@@ -43,15 +62,15 @@ async function websocket(path) {
   return ws;
 }
 async function main() {
-  launch('src/mock-source.ts', { MOCK_PORT: String(MOCK_PORT) });
-  await sleep(400);
+  testSource = await startTestSource();
+  const testPort = testSource.address().port;
   launch('src/server.ts', { PORT: String(PORT) });
   await until(() => request('status'));
   const monitor = await websocket('monitor');
   const events = [];
   monitor.on('message', raw => { const e = JSON.parse(raw.toString('utf8')); events.push(e); });
   const existing = await request('sessions');
-  await request('connect', { url: `ws://127.0.0.1:${MOCK_PORT}`, token: '', subscription: '' });
+  await request('connect', { url: `ws://127.0.0.1:${testPort}`, token: '', subscription: '' });
   await until(async () => (await request('status')).upstream.state === 'connected');
   await until(async () => (await request('status')).upstream.received >= 9);
   assert((await request('sessions')).length === existing.length, '仅连接/预览时不应该产生文件');
@@ -105,4 +124,11 @@ async function main() {
 }
 try { await main(); }
 catch (error) { console.error('[FAIL]', error); process.exitCode = 1; }
-finally { for (const child of children) child.kill('SIGTERM'); await sleep(250); }
+finally {
+  for (const child of children) child.kill('SIGTERM');
+  if (testSource) {
+    for (const client of testSource.clients) client.terminate();
+    await new Promise((resolve) => testSource.close(resolve));
+  }
+  await sleep(250);
+}

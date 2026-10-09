@@ -37,14 +37,7 @@ npm run dev
 
 浏览器打开 **http://127.0.0.1:8787**。
 
-要在没有真实业务后端的情况下演示：
-
-```bash
-# 在第二个终端启动演示坐标源，每约 16ms 推送一帧
-npm run mock
-```
-
-录制页面输入 `ws://127.0.0.1:9001`，连接成功后即可看到示例台球坐标 JSON。点击“开始录制”，运行几秒后点击“停止并保存”，再切换“数据推送”页面选择录制文件。
+在录制页面输入**真实业务后端的 WebSocket 地址**，点击连接后即可查看实时接收日志。需要保存数据时手动开始录制、停止并保存；之后切换到数据推送页面，选择录制文件并设置推送速率。
 
 ## Vue 3 项目连接
 
@@ -70,11 +63,11 @@ ws.onmessage = (event) => {
 ## 目录结构
 
 ```text
-ws-recorder-replay/
+ws-studio/
 ├── public/index.html        # 两页完整可视化管理界面（原生 HTML/CSS/JS）
+├── public/logo.svg          # 项目图标
 ├── src/server.ts            # 上游 WS / 录制器 / 推送器 / REST API / 监控 WS
-├── src/mock-source.ts       # 60FPS 左右的模拟台球坐标源
-├── scripts/e2e.mjs          # 端到端行为测试
+├── scripts/e2e.mjs          # 端到端行为测试（使用测试脚本内部临时 WS 服务）
 ├── examples/vue-client.ts   # Vue 消费端最小示例
 ├── .env.example
 ├── package.json

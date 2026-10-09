@@ -3,11 +3,12 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "start": "tsx src/server.ts",
-    "mock": "tsx src/mock-source.ts",
     "check": "tsc --noEmit",
     "test:e2e": "node scripts/e2e.mjs"
   },

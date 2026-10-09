@@ -35,7 +35,7 @@ button,input,textarea{font:inherit}button{cursor:pointer;transition:.16s ease}bu
       <div class="grid-two">
         <section class="card" aria-labelledby="connectTitle">
           <div class="card-header"><div><h2 class="card-title" id="connectTitle">连接 WebSocket 数据源</h2><p class="card-desc">手动输入真实地址，连接成功后立即查看数据，但不会自动录制。</p></div><span class="mini-badge" id="upstreamBadge">未连接</span></div>
-          <div class="form-group"><label class="form-label" for="upstreamUrl">WebSocket 地址</label><input class="field" id="upstreamUrl" placeholder="ws://192.168.1.10:8080/coordinates" value="ws://127.0.0.1:9001" spellcheck="false" autocomplete="off"></div>
+          <div class="form-group"><label class="form-label" for="upstreamUrl">WebSocket 地址</label><input class="field" id="upstreamUrl" placeholder="ws://192.168.1.10:8080/coordinates" spellcheck="false" autocomplete="off"></div>
           <details class="advanced"><summary>高级连接设置（Token / 订阅消息）</summary><div class="form-group"><label class="form-label" for="upstreamToken">Authorization Bearer Token（可选）</label><input class="field" id="upstreamToken" type="password" placeholder="连接时发送，不保存到录制文件" autocomplete="off"></div><div class="form-group"><label class="form-label" for="upstreamSubscribe">连接成功后发送的订阅消息（可选）</label><textarea class="fieldarea" id="upstreamSubscribe" rows="2" placeholder='{"type":"subscribe","topic":"coordinates"}'></textarea></div></details>
           <div class="buttons"><button class="btn primary" id="connectBtn">↗ 连接服务</button><button class="btn outline" id="disconnectBtn">断开连接</button></div><p class="hint">连接由本地 Node.js 服务发起，可携带 Authorization 请求头。地址仅用于本次连接，不会写入录制文件。</p>
         </section>
