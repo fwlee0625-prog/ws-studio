@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-labelledby="title description">
+  <title id="title">WS Studio</title>
+  <desc id="description">A flowing data line branches into a record node and a play node</desc>
+  <defs>
+    <linearGradient id="in" x1="16" y1="64" x2="102" y2="34" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#647AFA"/>
+      <stop offset="1" stop-color="#5368EA"/>
+    </linearGradient>
+    <linearGradient id="out" x1="35" y1="63" x2="102" y2="94" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#647AFA"/>
+      <stop offset="1" stop-color="#25B7C5"/>
+    </linearGradient>
+  </defs>
+  <path d="M17 64H39C58 64 55 35 78 35H86" stroke="url(#in)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M39 64C58 64 55 93 78 93H86" stroke="url(#out)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="18" cy="64" r="9" fill="#6579FA"/>
+  <circle cx="99" cy="35" r="16" fill="#576EF3"/>
+  <circle cx="99" cy="35" r="6" fill="#FFF"/>
+  <circle cx="99" cy="93" r="16" fill="#22B7C6"/>
+  <path d="m96 85 11 8-11 8V85Z" fill="#FFF"/>
+</svg>

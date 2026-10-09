@@ -1,3 +1,5 @@
+<p align="center"><img src="./public/logo.svg" alt="WS Studio Logo" width="100" height="100"></p>
+
 # WS Studio —— WebSocket 数据录制与推送（V2）
 
 一个供开发与联调使用的 **Node.js + TypeScript + ws** 本地工具。它不需要数据库，也不要求修改真实业务后端。专门解决“前端需要真实坐标数据，但不想每次都依赖业务后端持续推送”的问题。

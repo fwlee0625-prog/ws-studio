@@ -365,6 +365,11 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const url = new URL(req.url || '/', 'http://localhost');
   const path = url.pathname;
   try {
+    if (req.method === 'GET' && path === '/logo.svg') {
+      const logo = await readFile(join(process.cwd(), 'public/logo.svg'));
+      res.writeHead(200, { 'Content-Type': 'image/svg+xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600', 'X-Content-Type-Options': 'nosniff' });
+      res.end(logo); return;
+    }
     if (req.method === 'GET' && (path === '/' || path === '/record' || path === '/push')) {
       const html = await readFile(join(process.cwd(), 'public/index.html'));
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
